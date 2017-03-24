@@ -15,7 +15,7 @@ const app = express();
 // Your url may require that it's composed of additional information including user and password
 // const conString = 'postgres://USER:PASSWORD@HOST:PORT/DBNAME';
 // Ben's login (don't be that guy)
-const conString = 'postgres://postgres:1234@localhost:5432/kilovolt';
+const conString = 'postgres://postgres:hofbrau@localhost:5432/kilovolt';
 
 // REVIEW: Pass the conString to pg, which creates a new client object
 const client = new pg.Client(conString);
@@ -108,7 +108,7 @@ app.put('/articles/:id', function(request, response) {
   });
 });
 
-// NOTE:
+// NOTE: The user makes a query to delete the row in the database table based on the article_id, and a response is sent reporting completion.
 app.delete('/articles/:id', function(request, response) {
   client.query(
     `DELETE FROM articles WHERE article_id=$1;`,
@@ -122,7 +122,7 @@ app.delete('/articles/:id', function(request, response) {
   });
 });
 
-// NOTE:
+// NOTE: The user makes a query to delete all content in the database table, and a response is sent reporting completion.
 app.delete('/articles', function(request, response) {
   client.query(
     'DELETE FROM articles;'
@@ -135,7 +135,7 @@ app.delete('/articles', function(request, response) {
   });
 });
 
-// NOTE:
+// NOTE: Calling the loadDB function.
 loadDB();
 
 app.listen(PORT, function() {
@@ -145,7 +145,7 @@ app.listen(PORT, function() {
 
 //////// ** DATABASE LOADER ** ////////
 ////////////////////////////////////////
-// NOTE:
+// NOTE: If there's nothing in the database table, pull and parse the stuff in the .json file and put into database.
 function loadArticles() {
   client.query('SELECT COUNT(*) FROM articles')
   .then(result => {
@@ -165,7 +165,7 @@ function loadArticles() {
   })
 }
 
-// NOTE:
+// NOTE: Create the table if it doesn't exist with these column names, then call the loadArticles function.
 function loadDB() {
   client.query(`
     CREATE TABLE IF NOT EXISTS articles (
