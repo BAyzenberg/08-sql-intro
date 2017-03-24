@@ -58,7 +58,7 @@ app.get('/articles', function(request, response) {
   })
 });
 
-// NOTE:
+// NOTE:The user makes a query through postgres taking the input object, and adding it to the database.  A response is sent back of completion.
 app.post('/articles', function(request, response) {
   client.query(
     `INSERT INTO
@@ -82,7 +82,7 @@ app.post('/articles', function(request, response) {
   });
 });
 
-// NOTE:
+// NOTE: The user makes a query to update articles with a certain id to change its content, replacing it with other content.
 app.put('/articles/:id', function(request, response) {
   client.query(
     `UPDATE articles
