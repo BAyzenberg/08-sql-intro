@@ -1,6 +1,6 @@
 'use strict';
 
-// TODO: Install and require the Node packages into your project, and ensure that it's now a new dependency in your package.json. DO NOT FORGET to run 'npm i'
+// DONE: Install and require the Node packages into your project, and ensure that it's now a new dependency in your package.json. DO NOT FORGET to run 'npm i'
 const pg = require('pg'); // 3rd party package
 const fs = require('fs'); // native Node
 const express = require('express'); // 3rd party package
@@ -14,7 +14,8 @@ const app = express();
 // Windows and Linux users; You should have retained the user/pw from the pre-work for this course.
 // Your url may require that it's composed of additional information including user and password
 // const conString = 'postgres://USER:PASSWORD@HOST:PORT/DBNAME';
-const conString = 'postgres://localhost:5432';
+// Ben's login (don't be that guy)
+const conString = 'postgres://postgres:1234@localhost:5432/kilovolt';
 
 // REVIEW: Pass the conString to pg, which creates a new client object
 const client = new pg.Client(conString);
@@ -31,13 +32,15 @@ app.use(express.static('./public'));
 
 // REVIEW: Routes for requesting HTML resources
 
-// NOTE:
+// NOTE: On request for localhost:3000 send the file index.html
 app.get('/', function(request, response) {
   response.sendFile('index.html', {root: '.'});
 });
 
-// NOTE:
+// NOTE: On request for localhost:3000/new send the file new.html
 app.get('/new', function(request, response) {
+  // localhost/new looks for a filepath not including the public directory not sure why
+  //  adding public to the root made it functional
   response.sendFile('new.html', {root: '.'});
 });
 
@@ -55,7 +58,7 @@ app.get('/articles', function(request, response) {
   })
 });
 
-// NOTE:
+// NOTE:The user makes a query through postgres taking the input object, and adding it to the database.  A response is sent back of completion.
 app.post('/articles', function(request, response) {
   client.query(
     `INSERT INTO
@@ -79,7 +82,7 @@ app.post('/articles', function(request, response) {
   });
 });
 
-// NOTE:
+// NOTE: The user makes a query to update articles with a certain id to change its content, replacing it with other content.
 app.put('/articles/:id', function(request, response) {
   client.query(
     `UPDATE articles
